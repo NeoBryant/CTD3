@@ -25,7 +25,6 @@ class ReplayBuffer:
         self.position = 0 
     
     def push(self, state, action, reward, next_state, done):
-        ''' 缓冲区是一个队列，容量超出时去掉开始存入的转移(transition)'''
         if len(self.buffer) < self.capacity:
             self.buffer.append(None)
         self.buffer[self.position] = (state, action, reward, next_state, done)
@@ -37,7 +36,6 @@ class ReplayBuffer:
         return state, action, reward, next_state, done
     
     def __len__(self):
-        ''' 返回当前存储的量'''
         return len(self.buffer)
 
     
@@ -158,10 +156,6 @@ class TD3():
         return self.actor(state).cpu().data.numpy().flatten()
 
     def update(self, num_iteration=1):
-        """更新网络参数
-        Args:
-            num_iteration (int, optional): 网络批处理学习次数. Defaults to 1.
-        """
         
         if len(self.memory) < self.batch_size: 
             return
