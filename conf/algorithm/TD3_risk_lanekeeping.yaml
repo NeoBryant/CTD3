@@ -1,0 +1,66 @@
+algo_name: TD3_risk
+# PPO2: PPO-clip
+
+seed: 1024
+
+render: False #True # 是否可视化
+eval_render: True
+
+dataloader:
+  memory_capacity: 10000 # 8000 # 经验回放池的容量
+  batch_size: 32 #256 #128 # mini-batch SGD中的批量大小
+
+  # todo: 采样方法
+  sample_type: "random" # 随机均匀采样 ｜ 重要性采样 | ...
+  
+
+model:
+  observation_dim: 5 #23 #23 # 观察空间维度
+  action_type: "continuous" # [continuous | discrete] 动作类型 
+  action_dim: 1  # 动作空间维度
+  action_config: # 当动作空间维度为1时
+    acceleration: 0  # 加速度默认值
+    steering: None   # 转向默认值
+    
+  
+  hidden_dim: 128 #256 # 网络隐藏层维度
+  # todo 自定义网络结构
+  # hidden_list: [256, 256] # 每个隐藏层的cell数量
+
+  # only for TD3
+  policy_delay: 2
+
+  policy_noise: 0.2 #0.1 # next_action的动作噪声的方差
+  noise_clip: 0.2 #0.1 # next_action动作噪声的范围半径[-noise_clip,noise_clip]
+ 
+trainer:
+  gamma: 0.95 #0.99 # 折扣因子
+
+  critic_lr: 1.0e-3 #1e-3 # 评论家网络的学习率
+  actor_lr: 1.0e-4 #1e-4 # 演员网络的学习率
+
+  target_update: 2 # 目标网络的更新频率
+  soft_tau: 1.0e-2 # 软更新参数
+
+  learn_freq: 100 # [step] 更新模型的频率
+  
+  print_freq: 10 # [epoch] 打印信息的频率
+  save_freq: 100 # [epoch] 保存模型的频率
+  
+  # max_epoch: 300 #300 # 学习的epoch数量
+  max_timesteps: 10000 #5000 #10000 # 学习的step数量
+  max_updates: 10 #1 # 每个step学习的次数
+
+  eval_freq: 1000 # 每迭代eval_freq次网络评估一次模型
+  eval_episodes: 10 # 测试的episode次数
+
+  # 当前执行的动作加噪声
+  exploration_noise: 0.2 #0.1 #0.2 # 对执行动作加高斯噪声的标准差
+  noise_clip: 0.2 #0.1 # 动作噪声的范围半径[-noise_clip,noise_clip]
+
+  # todo: 实现预训练和接续训练
+  is_pretrained: False
+  is_finetune: False
+  resume_path: ""
+
+
